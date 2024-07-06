@@ -2,7 +2,7 @@ import pyRofex as pr
 import yfinance as yf
 import math 
 from datetime import date 
-from utils import compute_lending_rate
+from utils import compute_rate
 
 
 def parse_maturity_date_and_compute_tValue(maturity_date): 
@@ -47,9 +47,9 @@ class ArbitrageOpportunity:
             bid_price = bid[0]['price']
             spot = self.spot[symbol]
             tValue = parse_maturity_date_and_compute_tValue(pr.get_instrument_details(symbol)['instrument']['maturityDate'])
-            self.lending_rates[symbol] = compute_lending_rate(spot, bid_price, tValue)
-            if compute_lending_rate(spot, bid_price, tValue) < self.current_rate:
-                print(f"La tasa de interés implícita colocadora de {symbol} es menor a la tasa de interés del bono del Tesoro a 10 años más reciente. Oportunidad de arbitraje")
+            self.lending_rates[symbol] = compute_rate(spot, bid_price, tValue)
+            if compute_rate(spot, bid_price, tValue) > self.current_rate:
+                print(f"La tasa de interés implícita tomadora de {symbol} es menor a la tasa de interés del bono del Tesoro a 10 años más reciente. Oportunidad de arbitraje")
     
         #Second case: offer was updated and new borrowing rate has to be computed
         if offer is not None and offer != []: 
@@ -57,9 +57,9 @@ class ArbitrageOpportunity:
             offer_price = offer[0]['price']
             spot = self.spot[symbol]
             tValue = parse_maturity_date_and_compute_tValue(pr.get_instrument_details(symbol)['instrument']['maturityDate'])
-            self.borrowing_rates[symbol] = compute_lending_rate(spot, offer_price, tValue)
-            if compute_lending_rate(spot, offer_price, tValue) > self.current_rate:
-                print(f"La tasa de interés implícita tomadora de {symbol} es mayor a la tasa de interés del bono del Tesoro a 10 años más reciente. Oportunidad de arbitraje")
+            self.borrowing_rates[symbol] = compute_rate(spot, offer_price, tValue)
+            if compute_rate(spot, offer_price, tValue) < self.current_rate:
+                print(f"La tasa de interés implícita colocadora de {symbol} es mayor a la tasa de interés del bono del Tesoro a 10 años más reciente. Oportunidad de arbitraje")
     
     
     def error_handler(self,message):
