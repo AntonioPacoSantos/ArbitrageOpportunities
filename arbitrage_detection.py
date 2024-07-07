@@ -82,17 +82,18 @@ if __name__ == "__main__":
     'YPFD/OCT24',
     'YPFD/AGO24',
     'YPFD/AGO24/OCT24',
-    #'DLR/AGO24'
+    'DLR/AGO24'
     ]   
 
 
     #Getting the spots for the chosen instruments
-    tickers = yf.Tickers("ggal pamp.ba ypf")
+    tickers = yf.Tickers("ggal pamp.ba ypf ARS=X")
     
     #Missing spot for usd 
     spot_ggal = (tickers.tickers['GGAL'].info)['currentPrice']
     spot_pamp = (tickers.tickers['PAMP.BA'].info)['currentPrice']
     spot_ypfd = (tickers.tickers['YPF'].info)['currentPrice']
+    spot_usd = (tickers.tickers['ARS=X'].info)['previousClose']
     
     spot_for_future = {
         'GGAL/OCT24': spot_ggal,
@@ -103,8 +104,8 @@ if __name__ == "__main__":
         'PAMP/AGO24/OCT24': spot_pamp,
         'YPFD/OCT24': spot_ypfd,
         'YPFD/AGO24': spot_ypfd,
-        'YPFD/AGO24/OCT24': spot_ypfd
-        #Missing spot for usd
+        'YPFD/AGO24/OCT24': spot_ypfd,
+        'DLR/AGO24': spot_usd
     }
     
     ArbitrageOpportunity(instruments, spot_for_future, latest_rate)
