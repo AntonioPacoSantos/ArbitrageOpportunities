@@ -1,15 +1,8 @@
 import pyRofex as pr  
 import yfinance as yf
-import math 
-from datetime import date 
 from utils import compute_rate
 
 
-def parse_maturity_date_and_compute_tValue(maturity_date): 
-    current_date = date.today()
-    maturity_parsed_date = date(int(maturity_date[0:4]), int(maturity_date[4:6]), int(maturity_date[6:8]))
-    tValue = (maturity_parsed_date - current_date).days / 365
-    return tValue    
 
 class ArbitrageOpportunity: 
     def __init__(self, instruments, spots,current_rate): 
@@ -43,22 +36,22 @@ class ArbitrageOpportunity:
         offer = message['marketData']['OF']            
         #First case: bid was updated and new lending rate has to be computed 
         if bid is not None and bid != []:
+            #Get the symbol of the instrument that was updated and the new bid price 
             symbol = message['instrumentId']['symbol']
             bid_price = bid[0]['price']
-            spot = self.spot[symbol]
-            tValue = parse_maturity_date_and_compute_tValue(pr.get_instrument_details(symbol)['instrument']['maturityDate'])
-            self.bid_rates[symbol] = compute_rate(spot, bid_price, tValue)
-            if compute_rate(spot, bid_price, tValue) > self.current_rate:
+            rate = compute_rate(symbol,bid_price,self.spot)
+            self.bid_rates[symbol] = rate
+            if rate > self.current_rate:
                 print(f"La tasa de interés implícita tomadora de {symbol} es mayor a la tasa de interés del bono del Tesoro a 10 años más reciente. Oportunidad de arbitraje")
     
         #Second case: offer was updated and new borrowing rate has to be computed
         if offer is not None and offer != []: 
+            #Get the symbol of the instrument that was updated and the new offer price
             symbol = message['instrumentId']['symbol']
             offer_price = offer[0]['price']
-            spot = self.spot[symbol]
-            tValue = parse_maturity_date_and_compute_tValue(pr.get_instrument_details(symbol)['instrument']['maturityDate'])
-            self.offer_rates[symbol] = compute_rate(spot, offer_price, tValue)
-            if compute_rate(spot, offer_price, tValue) < self.current_rate:
+            rate = compute_rate(symbol,offer_price,self.spot)
+            self.offer_rates[symbol] = rate
+            if rate < self.current_rate:
                 print(f"La tasa de interés implícita colocadora de {symbol} es menor a la tasa de interés del bono del Tesoro a 10 años más reciente. Oportunidad de arbitraje")
     
     
