@@ -16,8 +16,8 @@ class ArbitrageOpportunity:
         #initialize the class with the instruments, the spots for each instrument, and the current rate of interest for the treasury bond
         self.instruments = instruments
         self.spots = spots
-        self.lending_rates = {}
-        self.borrowing_rates = {}
+        self.bid_rates = {}
+        self.offer_rates = {}
         self.entries = [
             pr.MarketDataEntry.BIDS,
             pr.MarketDataEntry.OFFERS,
@@ -47,7 +47,7 @@ class ArbitrageOpportunity:
             bid_price = bid[0]['price']
             spot = self.spot[symbol]
             tValue = parse_maturity_date_and_compute_tValue(pr.get_instrument_details(symbol)['instrument']['maturityDate'])
-            self.lending_rates[symbol] = compute_rate(spot, bid_price, tValue)
+            self.bid_rates[symbol] = compute_rate(spot, bid_price, tValue)
             if compute_rate(spot, bid_price, tValue) > self.current_rate:
                 print(f"La tasa de interés implícita tomadora de {symbol} es mayor a la tasa de interés del bono del Tesoro a 10 años más reciente. Oportunidad de arbitraje")
     
@@ -57,7 +57,7 @@ class ArbitrageOpportunity:
             offer_price = offer[0]['price']
             spot = self.spot[symbol]
             tValue = parse_maturity_date_and_compute_tValue(pr.get_instrument_details(symbol)['instrument']['maturityDate'])
-            self.borrowing_rates[symbol] = compute_rate(spot, offer_price, tValue)
+            self.offer_rates[symbol] = compute_rate(spot, offer_price, tValue)
             if compute_rate(spot, offer_price, tValue) < self.current_rate:
                 print(f"La tasa de interés implícita colocadora de {symbol} es menor a la tasa de interés del bono del Tesoro a 10 años más reciente. Oportunidad de arbitraje")
     
