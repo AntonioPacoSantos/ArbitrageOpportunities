@@ -5,8 +5,11 @@ import os
 
 
 def compute_rate(symbol,bid_price,spots):
+    #Get the spot for the chosen instrument 
     spot_price = spots[symbol]
+    #Get the maturity date of the chosen instrument
     date_of_closing = pr.get_instrument_details(symbol)['instrument']['maturityDate']
+    #Compute the value of t 
     tValue = parse_maturity_date_and_compute_tValue(date_of_closing)
     return math.log(bid_price/spot_price) / tValue
 
