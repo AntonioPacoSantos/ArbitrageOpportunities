@@ -101,7 +101,6 @@ if __name__ == "__main__":
     
     #Computting CCL for USD with YPF and YPFD.BA
     spot_usd = spot_ypfd/(tickers.tickers['YPF'].info)['currentPrice']
-    print(spot_usd)
     
     spot_for_future = {
         'GGAL/OCT24': spot_ggal,
