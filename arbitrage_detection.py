@@ -1,11 +1,39 @@
 import pyRofex as pr  
 import yfinance as yf
 from utils import compute_rate
+import os 
 
 
+def get_credentials():
+    if not os.path.exists('config.txt'):
+        config_file = open('config.txt', "w")
+        print("No existe el archivo de configuración.")
+        user = input('Ingrese su usario:') 
+        password = input('Ingrese su contraseña:')
+        account = input('Ingrese su cuenta:')
+        config_file.write(f"user={user}\n",)
+        config_file.write(f"password={password}\n")
+        config_file.write(f"account={account}")
+        config_file.close()
+        credentials = {
+            'user': user,
+            'password': password,
+            'account': account
+        }
+    else:
+        config_file = open('config.txt', "r")
+        credentials = {}
+        for line in config_file:
+            key, value = line.split('=')
+            value = value.strip()
+            credentials[key] = value
+    return credentials
+    
+         
+        
 
 class ArbitrageOpportunity: 
-    def __init__(self, instruments, spots,current_rate): 
+    def __init__(self, instruments, spots,current_rate,credentials): 
         #initialize the class with the instruments, the spots for each instrument, and the current rate of interest for the treasury bond
         self.instruments = instruments
         self.spots = spots
@@ -18,9 +46,9 @@ class ArbitrageOpportunity:
         self.current_rate = current_rate
         
         #initialize the environment and subscribe to the market data
-        pr.initialize(user="antoniopacosantos11540",
-                   password="dggybB0#",
-                   account="REM11540",
+        pr.initialize(user=credentials['user'],
+                   password=credentials['password'],
+                   account=credentials['account'],
                    environment=pr.Environment.REMARKET)
         
         pr.init_websocket_connection(market_data_handler=self.market_data_handler,
@@ -39,18 +67,20 @@ class ArbitrageOpportunity:
             #Get the symbol of the instrument that was updated and the new bid price 
             symbol = message['instrumentId']['symbol']
             bid_price = bid[0]['price']
-            rate = compute_rate(symbol,bid_price,self.spot)
+            rate = compute_rate(symbol,bid_price,self.spots)
             self.bid_rates[symbol] = rate
+            print(f'Nueva tasa de interés implícita tomadora para {symbol}: {rate}')
             if rate > self.current_rate:
                 print(f"La tasa de interés implícita tomadora de {symbol} es mayor a la tasa de interés del bono del Tesoro a 10 años más reciente. Oportunidad de arbitraje")
-    
+
         #Second case: offer was updated and new borrowing rate has to be computed
         if offer is not None and offer != []: 
             #Get the symbol of the instrument that was updated and the new offer price
             symbol = message['instrumentId']['symbol']
             offer_price = offer[0]['price']
-            rate = compute_rate(symbol,offer_price,self.spot)
+            rate = compute_rate(symbol,offer_price,self.spots)
             self.offer_rates[symbol] = rate
+            print(f'Nueva tasa de interés implícita colocadora para {symbol}: {rate}')
             if rate < self.current_rate:
                 print(f"La tasa de interés implícita colocadora de {symbol} es menor a la tasa de interés del bono del Tesoro a 10 años más reciente. Oportunidad de arbitraje")
     
@@ -108,4 +138,7 @@ if __name__ == "__main__":
         'DLR/AGO24': spot_usd
     }
     
-    ArbitrageOpportunity(instruments, spot_for_future, latest_rate)
+    #Create a file config with the credentials if not created yet 
+    credentials = get_credentials()
+    
+    ArbitrageOpportunity(instruments, spot_for_future, latest_rate,credentials)
