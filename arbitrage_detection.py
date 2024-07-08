@@ -28,6 +28,12 @@ class ArbitrageOpportunity:
         
         
     def market_data_handler(self,message):
+        """ 
+        :param message: the message received from the market data
+        :type message: dict
+        
+        :return: the function updates the interest rates of the instruments, if necessary, and finds arbitrage opportunities
+        """
         print("Market Data Message Received: {0}".format(message))
         #Check the bid and the offer of the updated instrument 
         symbol = message['instrumentId']['symbol']
