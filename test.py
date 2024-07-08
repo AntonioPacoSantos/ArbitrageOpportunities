@@ -2,8 +2,7 @@ import unittest
 import pyRofex as pr
 from utils import compute_rate, get_credentials
 
-class TestComputeRate(unittest.TestCase):
-    
+class TestComputeRate(unittest.TestCase): 
     def __init__(self, *args, **kwargs):
         super(TestComputeRate, self).__init__(*args, **kwargs)
         #Initialize environment 
