@@ -13,13 +13,13 @@ class TestComputeRate(unittest.TestCase):
             environment=pr.Environment.REMARKET)
         
         self.spots = {
-            'GGAL/OCT24': 10
+            'GGAL/OCT24': 3900
         }
         self.symbol = 'GGAL/OCT24'
-        self.bid_price = 15
+        self.bid_price = 4200
         
     def test_compute_rate(self): 
-        self.assertEqual(compute_rate(self.symbol,self.bid_price,self.spots), 1.286910995299826)
+        self.assertEqual(compute_rate(self.symbol,self.bid_price,self.spots), 0.23521225944442148)
         
 
 if __name__ == '__main__':
