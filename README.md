@@ -8,7 +8,7 @@ Se implementa entonces, en la clase ArbitrageOpportunities, un modelo que hace l
   - La tasa colocadora se computa como t = ln(offer/spot)/t. 
 3. En caso de que haya una oportunidad de arbitraje, se notifica al usuario mediante un print en pantalla.
   - Si la tasa tomadora es mayor que la tasa de interés de mercado, entonces hay una oportunidad de arbitraje: vender el futuro y comprar el activo subyacente a tasa de mercado.
-  - Si la tasa colocadora es menor que la tasa de interés de mercado, entonces hay una oportunidad de arbitraje: comprar el futuro y vender el activo subyacente; luego, invertir el capital y obtener el interés de mercado. Finalmente, comprar el activo a precio de mercado una vez que cierre el futuro. 
+  - Si la tasa colocadora es menor que la tasa de interés de mercado, entonces hay una oportunidad de arbitraje: comprar el futuro y vender el activo subyacente; luego, invertir el capital y obtener el interés de mercado.  
   - Si la tasa tomadora es mayor que la colocadora (este caso es casi imposible de encontrar, pero existe la ínfima posibilidad, por lo que no se debería descartar), se vende y se compra el futuro. 
   
 ## Ejecución 
