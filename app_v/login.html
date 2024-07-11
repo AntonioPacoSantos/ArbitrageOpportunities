@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+</head>
+
+<body>
+    <h1>Login Page</h1>
+    <form id="loginForm">
+        <label for="user">Username:</label>
+        <input type="text" id="user" name="user"><br><br>
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password"><br><br>
+        <label for="account">Account:</label>
+        <input type="text" id="account" name="account"><br><br>
+        <button type="button" id="loginButton">Login</button>
+    </form>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const loginURL = 'http://127.0.0.1:5000/login';
+
+            // Function to fetch elements and update the table
+            function login() {
+                fetch(loginURL, {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        user: document.getElementById('user').value,
+                        password: document.getElementById('password').value,
+                        account: document.getElementById('account').value
+                    }),
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log('Success:', data);
+                        if (data['message'] === 'Credentials received') {
+                            window.location.href = 'index.html';
+                        } else {
+                            console.log('Login failed:', data);
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error fetching data:', error);
+                    });
+            }
+
+            // Attach the login function to the button click event
+            document.getElementById('loginButton').addEventListener('click', login);
+        });
+    </script>
+</body>
+
+</html>

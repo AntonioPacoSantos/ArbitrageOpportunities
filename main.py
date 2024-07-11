@@ -1,5 +1,5 @@
-from flask import Flask, jsonify
-from flask_restful import Api, Resource 
+from flask import Flask, jsonify, session 
+from flask_restful import Api, Resource, reqparse
 from flask_cors import CORS
 from arbitrage_detection import ArbitrageOpportunity
 import yfinance as yf 
@@ -50,22 +50,34 @@ spot_for_future = {
 }
 
 #Create a file config with the credentials if not created yet 
-credentials = get_credentials()
+#credentials = get_credentials()
 
-ao = ArbitrageOpportunity(instruments, spot_for_future, latest_rate,credentials)
-
-    
 app = Flask(__name__)
 CORS(app)
 
-api = Api(app)
 
-@app.route('/', methods=['GET'])
-def get_dictioanry():
-    response =  jsonify({'bid': ao.bid_rates, 'offer': ao.offer_rates,'ir': ao.current_rate })
-    response.headers.add('Access-Control-Allow-Origin', '*')
-    return response
-
+api = Api(app) 
+ao = {} 
+login_put_args = reqparse.RequestParser()
+login_put_args.add_argument("user", type=str, help="Username is required", required=True, location='json')
+login_put_args.add_argument("password", type=str, help="Password is required", required=True, location = 'json')
+login_put_args.add_argument("account", type=str, help="Account is required", required=True, location= 'json')
+    
+class Arbitrage(Resource):
+    def get(self):
+        response =  jsonify({'bid': ao['data'].bid_rates, 'offer': ao['data'].offer_rates,'ir': ao['data'].current_rate })
+        response.headers.add('Access-Control-Allow-Origin', '*')
+        return response 
+    
+class Login(Resource): 
+    def post(self):
+        args = login_put_args.parse_args()
+        ao['data'] = ArbitrageOpportunity(instruments, spot_for_future, latest_rate, args)
+        return {'message': 'Credentials received'}, 200
+        
+api.add_resource(Arbitrage, '/')
+api.add_resource(Login, '/login')
 if __name__ == "__main__":
     app.run(debug=True)
+
   
