@@ -3,7 +3,6 @@ from flask_restful import Api, Resource, reqparse
 from flask_cors import CORS
 from arbitrage_detection import ArbitrageOpportunity
 import yfinance as yf 
-from utils import get_credentials
 
     
 #Getting last interest rates from the treasury bond
@@ -67,13 +66,13 @@ class Arbitrage(Resource):
     def get(self):
         response =  jsonify({'bid': ao['data'].bid_rates, 'offer': ao['data'].offer_rates,'ir': ao['data'].current_rate })
         response.headers.add('Access-Control-Allow-Origin', '*')
-        return response 
+        return response
     
 class Login(Resource): 
     def post(self):
         args = login_put_args.parse_args()
         ao['data'] = ArbitrageOpportunity(instruments, spot_for_future, latest_rate, args)
-        return {'message': 'Credentials received'}, 200
+        return {'message': 'Credentials received'},200
         
 api.add_resource(Arbitrage, '/')
 api.add_resource(Login, '/login')
