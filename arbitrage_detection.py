@@ -7,8 +7,8 @@ class ArbitrageOpportunity:
         #initialize the class with the instruments, the spots for each instrument, and the current rate of interest for the treasury bond
         self.instruments = instruments
         self.spots = spots
-        self.bid_rates = {}
-        self.offer_rates = {}
+        self.bid_rates = {instrument : "-" for instrument in instruments}
+        self.offer_rates = {instrument: "-" for instrument in instruments}
         self.entries = [
             pr.MarketDataEntry.BIDS,
             pr.MarketDataEntry.OFFERS,
@@ -34,7 +34,7 @@ class ArbitrageOpportunity:
         
         :return: the function updates the interest rates of the instruments, if necessary, and finds arbitrage opportunities
         """
-        print("Market Data Message Received: {0}".format(message))
+        #print("Market Data Message Received: {0}".format(message))
         #Check the bid and the offer of the updated instrument 
         symbol = message['instrumentId']['symbol']
         bid = message['marketData']['BI']
@@ -45,11 +45,11 @@ class ArbitrageOpportunity:
             bid_price = bid[0]['price']
             rate = compute_rate(symbol,bid_price,self.spots)
             #Check if the new bid is higher than the previous bid
-            if (symbol in self.bid_rates and rate > self.bid_rates[symbol]) or symbol not in self.bid_rates:
+            if (self.bid_rates[symbol] != "-" and rate > self.bid_rates[symbol]) or self.bid_rates[symbol] == "-":
                 self.bid_rates[symbol] = rate
-                print(f'Nueva tasa de interés implícita tomadora para {symbol}: {rate}')
-                if rate > self.current_rate:
-                    print(f"La tasa de interés implícita tomadora de {symbol} es mayor a la tasa de interés de mercados. Oportunidad de arbitraje")
+                #print(f'Nueva tasa de interés implícita tomadora para {symbol}: {rate}')
+                #if rate > self.current_rate:
+                    #print(f"La tasa de interés implícita tomadora de {symbol} es mayor a la tasa de interés de mercados. Oportunidad de arbitraje")
 
         #Second case: offer was updated and new borrowing rate has to be computed
         if offer is not None and offer != []: 
@@ -57,15 +57,15 @@ class ArbitrageOpportunity:
             offer_price = offer[0]['price']
             rate = compute_rate(symbol,offer_price,self.spots)
             #Check if the new offer is lower than the previous offer
-            if (symbol in self.offer_rates and rate < self.offer_rates[symbol]) or symbol not in self.offer_rates:    
+            if (self.offer_rates[symbol] != "-" and rate < self.offer_rates[symbol]) or self.offer_rates[symbol] == "-" :    
                 self.offer_rates[symbol] = rate
-                print(f'Nueva tasa de interés implícita colocadora para {symbol}: {rate}')
-                if rate < self.current_rate:
-                    print(f"La tasa de interés implícita colocadora de {symbol} es menor a la tasa de interés de mercado. Oportunidad de arbitraje")
+                #print(f'Nueva tasa de interés implícita colocadora para {symbol}: {rate}')
+                #if rate < self.current_rate:
+                    #print(f"La tasa de interés implícita colocadora de {symbol} es menor a la tasa de interés de mercado. Oportunidad de arbitraje")
             
-        if symbol in self.bid_rates and symbol in self.offer_rates: 
-            if self.bid_rates[symbol] > self.offer_rates[symbol]:
-                print(f"La tasa de interés implícita tomadora de {symbol} es menor a la tasa de interés implícita colocadora. Oportunidad de arbitraje")
+        #if symbol in self.bid_rates and symbol in self.offer_rates: 
+            #if self.bid_rates[symbol] > self.offer_rates[symbol]:
+                #print(f"La tasa de interés implícita tomadora de {symbol} es menor a la tasa de interés implícita colocadora. Oportunidad de arbitraje")
                 
     def error_handler(self,message):
         print("Error Message Received: {0}".format(message))
@@ -125,3 +125,4 @@ if __name__ == "__main__":
     credentials = get_credentials()
     
     ArbitrageOpportunity(instruments, spot_for_future, latest_rate,credentials)
+    print(1)
