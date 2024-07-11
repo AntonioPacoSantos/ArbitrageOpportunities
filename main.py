@@ -72,7 +72,7 @@ class Login(Resource):
     def post(self):
         args = login_put_args.parse_args()
         ao['data'] = ArbitrageOpportunity(instruments, spot_for_future, latest_rate, args)
-        return {'message': 'Credentials received'},200
+        return {'message': 'Credentials received'}
         
 api.add_resource(Arbitrage, '/')
 api.add_resource(Login, '/login')
