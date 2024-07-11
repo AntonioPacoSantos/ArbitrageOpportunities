@@ -62,7 +62,7 @@ api = Api(app)
 
 @app.route('/', methods=['GET'])
 def get_dictioanry():
-    response =  jsonify({'bid': ao.bid_rates, 'offer': ao.offer_rates,'ir': latest_rate })
+    response =  jsonify({'bid': ao.bid_rates, 'offer': ao.offer_rates,'ir': ao.current_rate })
     response.headers.add('Access-Control-Allow-Origin', '*')
     return response
 

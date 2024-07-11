@@ -1,9 +1,8 @@
 document.addEventListener('DOMContentLoaded', function () {
     const apiURL = 'http://127.0.0.1:5000/';
-    const apiURLForIR = apiURL + 'ir';
+
 
     // Function to fetch elements and update the table
-
     function fetchElements() {
         fetch(apiURL)
             .then(response => response.json())
@@ -69,25 +68,3 @@ document.addEventListener('DOMContentLoaded', function () {
         tbody.appendChild(row);
     }
 });
-
-
-/* 
-
-fetch('http://127.0.0.1:5000/')
-    .then(response => response.json())
-    .then(data => {
-        const bidRates = data['bid']
-        const offerRates = data['offer']
-        //Create a new json to store the bid and offer for each instrument 
-        const instrumentRates = [
-            ['GGAL/24']
-        ]
-        instrumentRates[0].push(bidRates['GGAL/AGO24'])
-        instrumentRates[0].push(offerRates['GGAL/AGO24']);
-        instrumentRates[0].push("NO");
-
-        console.log(instrumentRates);
-    })
-    .catch(error => {
-        console.error('Error fetching data:', error);
-    }); */
