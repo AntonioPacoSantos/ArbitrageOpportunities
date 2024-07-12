@@ -1,3 +1,12 @@
+# Usar una imagen base de Python
+FROM python:3.9
+
+# Establecer el directorio de trabajo
+WORKDIR /api
+
+# Copiar los archivos de requisitos y el código de la aplicación
+COPY requirements.txt requirements.txt
+RUN pip install -r requirements.txt
 from flask import Flask, jsonify, session 
 from flask_restful import Api, Resource, reqparse
 from flask_cors import CORS
@@ -76,7 +85,13 @@ class Login(Resource):
         
 api.add_resource(Arbitrage, '/')
 api.add_resource(Login, '/login')
+
+
 if __name__ == "__main__":
     app.run(debug=True)
 
-  
+# Exponer el puerto en el que correrá Flask
+EXPOSE 5000
+
+# Comando para correr la aplicación
+CMD ["python3", "main.py"]
