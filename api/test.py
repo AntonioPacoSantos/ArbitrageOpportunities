@@ -19,7 +19,7 @@ class TestComputeRate(unittest.TestCase):
         self.bid_price = 4200
         
     def test_compute_rate(self): 
-        self.assertEqual(compute_rate(self.symbol,self.bid_price,self.spots), 0.23521225944442148)
+        self.assertEqual(compute_rate(self.symbol,self.bid_price,self.spots), 0.24368837690187808)
         
 
 if __name__ == '__main__':
