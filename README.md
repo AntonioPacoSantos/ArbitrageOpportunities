@@ -12,7 +12,7 @@ Se implementa entonces, en la clase ArbitrageOpportunities, un modelo que hace l
   - Si la tasa tomadora es mayor que la colocadora (este caso es casi imposible de encontrar, pero existe la ínfima posibilidad, por lo que no se debería descartar), se vende y se compra el futuro. 
   
 ## Ejecución 
-Para ejecutarlo, alcanza con correr el comando 
+Para ejecutarlo, acceder al directorio api y luego correr el comando 
 `python3 arbitrage_detection.py`
 Para correr los tests, 
 `python3 test.py`
@@ -21,4 +21,8 @@ La primera vez, es necesario que el usuario ingrese sus credenciales (usuario,co
 ## Algunas consideraciones 
 - Para determinar la tasa de interés de mercado, se utilizaron los bonos del tesoro americano a 13 semanas, IRX. 
 - Para obtener un valor del dolar real (notar que el que provee por defecto yfinance es el oficial, que no se puede utilizar para operar), se calculó el CCL dividiendo el valor de la acción de YPF en pesos (YPFD.BA), por el de la acción de YPF en dolares (YPF). 
+
+## REST API y frontend 
+- En esta actualización, se implementó una rest api, que permite a los usuarios loggearse con sus cuentas de remarkets y observar las oportunidades de arbitraje que el bot encuentra en una interfaz frontend. 
+Para acceder a la misma, la url es [Link](https://frontend-arbitrage-opportunities.pages.dev/login)
 
