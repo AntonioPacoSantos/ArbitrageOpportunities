@@ -35,7 +35,7 @@ class ArbitrageOpportunity:
         
         :return: the function updates the interest rates of the instruments, if necessary, and finds arbitrage opportunities
         """
-        #print("Market Data Message Received: {0}".format(message))
+        print("Market Data Message Received: {0}".format(message))
         #Check the bid and the offer of the updated instrument 
         symbol = message['instrumentId']['symbol']
         bid = message['marketData']['BI']
@@ -48,8 +48,11 @@ class ArbitrageOpportunity:
             #Check if the new bid is higher than the previous bid
             if (self.bid_rates[symbol] != "-" and bid_rate > self.bid_rates[symbol]) or self.bid_rates[symbol] == "-":
                 self.bid_rates[symbol] = bid_rate
+                print(f'Nueva tasa implícita tomadora para el futuro {symbol}: {bid_rate}')
                 if bid_rate > self.current_rate:
                     self.arbitrage_opportunities[symbol] = "Hay oportunidad de arbitraje: la tasa de interés implícita tomadora es mayor a la tasa de interés de mercado"
+                    print("Hay oportunidad de arbitraje: la tasa de interés implícita tomadora es mayor a la tasa de interés de mercado")
+                    
 
         #Second case: offer was updated and new borrowing rate has to be computed
         if offer is not None and offer != []: 
@@ -59,12 +62,15 @@ class ArbitrageOpportunity:
             #Check if the new offer is lower than the previous offer
             if (self.offer_rates[symbol] != "-" and offer_rate < self.offer_rates[symbol]) or self.offer_rates[symbol] == "-" :    
                 self.offer_rates[symbol] = offer_rate
+                print(f'Nueva tasa implícita colocadora para el futuro {symbol}: {offer_rate}')
                 if offer_rate < self.current_rate:
                     self.arbitrage_opportunities[symbol] = "Hay oportunidad de arbitraje: la tasa de interés implícita colocadora es menor a la tasa de interés de mercado"
+                    print("Hay oportunidad de arbitraje: la tasa de interés implícita colocadora es menor a la tasa de interés de mercado")
             
         if (self.offer_rates[symbol] != "-" and self.bid_rates[symbol] != "-"):
             if self.bid_rates[symbol] > self.offer_rates[symbol]:
                 self.arbitrage_opportunities[symbol] = "Hay oportunidad de arbitraje: la tasa de interés implícita tomadora es mayor a la tasa de interés implícita colocadora"
+                print("Hay oportunidad de arbitraje: la tasa de interés implícita tomadora es mayor a la tasa de interés implícita colocadora")
                 
     def error_handler(self,message):
         print("Error Message Received: {0}".format(message))
