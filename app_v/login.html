@@ -20,6 +20,7 @@
     </form>
 
     <script>
+        //Validates that the function is executed only after the document has been loaded
         document.addEventListener('DOMContentLoaded', function () {
             const loginURL = 'http://127.0.0.1:5000/login';
 
@@ -51,7 +52,6 @@
                         document.getElementById('loginForm').insertAdjacentHTML('beforeend', `<p> Error: Datos inválidos. Intente nuevamente. </p>`);
                     });
             }
-
             // Attach the login function to the button click event
             document.getElementById('loginButton').addEventListener('click', login);
         });

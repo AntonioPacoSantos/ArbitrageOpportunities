@@ -8,7 +8,7 @@ import yfinance as yf
 #Getting last interest rates from the treasury bond
 treasury_yield = yf.Ticker("^IRX")
 history = treasury_yield.history(period="1mo")
-latest_rate = (history['Close'][-1])/100
+latest_rate = float("{:.1f}".format((history['Close'][-1])))
 #Selecting the instruments to be analyzed
 instruments = [
 'GGAL/OCT24', 
@@ -64,7 +64,7 @@ login_put_args.add_argument("account", type=str, help="Account is required", req
     
 class Arbitrage(Resource):
     def get(self):
-        response =  jsonify({'bid': ao['data'].bid_rates, 'offer': ao['data'].offer_rates,'ir': ao['data'].current_rate })
+        response =  jsonify({'bid': ao['data'].bid_rates, 'offer': ao['data'].offer_rates,'ir': ao['data'].current_rate, 'arbitrage': ao['data'].arbitrage_opportunities})
         response.headers.add('Access-Control-Allow-Origin', '*')
         return response
     

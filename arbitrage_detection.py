@@ -9,6 +9,7 @@ class ArbitrageOpportunity:
         self.spots = spots
         self.bid_rates = {instrument : "-" for instrument in instruments}
         self.offer_rates = {instrument: "-" for instrument in instruments}
+        self.arbitrage_opportunities = {instrument: "No hay oportunidades de arbitraje" for instrument in instruments}
         self.entries = [
             pr.MarketDataEntry.BIDS,
             pr.MarketDataEntry.OFFERS,
@@ -43,29 +44,29 @@ class ArbitrageOpportunity:
         if bid is not None and bid != []:
             #Get the symbol of the instrument that was updated and the new bid price 
             bid_price = bid[0]['price']
-            rate = compute_rate(symbol,bid_price,self.spots)
+            bid_rate = float("{:.1f}".format(compute_rate(symbol,bid_price,self.spots)*100))
+            print('bid: ', bid_rate)
             #Check if the new bid is higher than the previous bid
-            if (self.bid_rates[symbol] != "-" and rate > self.bid_rates[symbol]) or self.bid_rates[symbol] == "-":
-                self.bid_rates[symbol] = rate
-                #print(f'Nueva tasa de interés implícita tomadora para {symbol}: {rate}')
-                #if rate > self.current_rate:
-                    #print(f"La tasa de interés implícita tomadora de {symbol} es mayor a la tasa de interés de mercados. Oportunidad de arbitraje")
+            if (self.bid_rates[symbol] != "-" and bid_rate > self.bid_rates[symbol]) or self.bid_rates[symbol] == "-":
+                self.bid_rates[symbol] = bid_rate
+                if bid_rate > self.current_rate:
+                    self.arbitrage_opportunities[symbol] = "Hay oportunidad de arbitraje: la tasa de interés implícita tomadora es mayor a la tasa de interés de mercado"
 
         #Second case: offer was updated and new borrowing rate has to be computed
         if offer is not None and offer != []: 
             #Get the symbol of the instrument that was updated and the new offer price   
             offer_price = offer[0]['price']
-            rate = compute_rate(symbol,offer_price,self.spots)
+            offer_rate = float("{:.1f}".format(compute_rate(symbol,offer_price,self.spots)*100))
+            print('offer: ', offer_rate)
             #Check if the new offer is lower than the previous offer
-            if (self.offer_rates[symbol] != "-" and rate < self.offer_rates[symbol]) or self.offer_rates[symbol] == "-" :    
-                self.offer_rates[symbol] = rate
-                #print(f'Nueva tasa de interés implícita colocadora para {symbol}: {rate}')
-                #if rate < self.current_rate:
-                    #print(f"La tasa de interés implícita colocadora de {symbol} es menor a la tasa de interés de mercado. Oportunidad de arbitraje")
+            if (self.offer_rates[symbol] != "-" and offer_rate < self.offer_rates[symbol]) or self.offer_rates[symbol] == "-" :    
+                self.offer_rates[symbol] = offer_rate
+                if offer_rate < self.current_rate:
+                    self.arbitrage_opportunities[symbol] = "Hay oportunidad de arbitraje: la tasa de interés implícita colocadora es menor a la tasa de interés de mercado"
             
-        #if symbol in self.bid_rates and symbol in self.offer_rates: 
-            #if self.bid_rates[symbol] > self.offer_rates[symbol]:
-                #print(f"La tasa de interés implícita tomadora de {symbol} es menor a la tasa de interés implícita colocadora. Oportunidad de arbitraje")
+        if (self.offer_rates[symbol] != "-" and self.bid_rates[symbol] != "-"):
+            if self.bid_rates[symbol] > self.offer_rates[symbol]:
+                self.arbitrage_opportunities[symbol] = "Hay oportunidad de arbitraje: la tasa de interés implícita tomadora es mayor a la tasa de interés implícita colocadora"
                 
     def error_handler(self,message):
         print("Error Message Received: {0}".format(message))
