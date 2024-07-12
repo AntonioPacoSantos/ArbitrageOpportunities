@@ -9,6 +9,7 @@ Flask==3.0.3
 Flask-Cors==4.0.1
 Flask-RESTful==0.3.10
 frozendict==2.4.4
+gunicorn==22.0.0
 html5lib==1.1
 idna==3.7
 itsdangerous==2.2.0
@@ -17,6 +18,7 @@ lxml==5.2.2
 MarkupSafe==2.1.5
 multitasking==0.0.11
 numpy==2.0.0
+packaging==24.1
 pandas==2.2.2
 peewee==3.17.6
 platformdirs==4.2.2
