@@ -1,6 +1,6 @@
 import pyRofex as pr  
 import yfinance as yf
-from utils import compute_rate, get_credentials
+from utils import compute_rate, get_credentials, market_rate_for_future
         
 class ArbitrageOpportunity: 
     def __init__(self, instruments, spots,current_rate,credentials): 
@@ -48,11 +48,11 @@ class ArbitrageOpportunity:
             #Check if the new bid is higher than the previous bid
             if (self.bid_rates[symbol] != "-" and bid_rate > self.bid_rates[symbol]) or self.bid_rates[symbol] == "-":
                 self.bid_rates[symbol] = bid_rate
-                print(f'Nueva tasa implícita tomadora para el futuro {symbol}: {bid_rate}')
-                if bid_rate > self.current_rate:
+                market_rate = float("{:.1f}".format(market_rate_for_future(symbol,self.current_rate)*100))
+                print(f'Nueva tasa implícita tomadora para el futuro {symbol}: {bid_rate}. Tasa de mercado: {market_rate}. Spot: {self.spots[symbol]}')
+                if bid_rate > market_rate:
                     self.arbitrage_opportunities[symbol] = "Hay oportunidad de arbitraje: la tasa de interés implícita tomadora es mayor a la tasa de interés de mercado"
                     print("Hay oportunidad de arbitraje: la tasa de interés implícita tomadora es mayor a la tasa de interés de mercado")
-                    
 
         #Second case: offer was updated and new borrowing rate has to be computed
         if offer is not None and offer != []: 
@@ -62,8 +62,9 @@ class ArbitrageOpportunity:
             #Check if the new offer is lower than the previous offer
             if (self.offer_rates[symbol] != "-" and offer_rate < self.offer_rates[symbol]) or self.offer_rates[symbol] == "-" :    
                 self.offer_rates[symbol] = offer_rate
-                print(f'Nueva tasa implícita colocadora para el futuro {symbol}: {offer_rate}')
-                if offer_rate < self.current_rate:
+                market_rate = float("{:.1f}".format(market_rate_for_future(symbol,self.current_rate)*100))
+                print(f'Nueva tasa implícita colocadora para el futuro {symbol}: {offer_rate}. Tasa de mercado: {market_rate}. Spot: {self.spots[symbol]}')
+                if offer_rate < market_rate:
                     self.arbitrage_opportunities[symbol] = "Hay oportunidad de arbitraje: la tasa de interés implícita colocadora es menor a la tasa de interés de mercado"
                     print("Hay oportunidad de arbitraje: la tasa de interés implícita colocadora es menor a la tasa de interés de mercado")
             

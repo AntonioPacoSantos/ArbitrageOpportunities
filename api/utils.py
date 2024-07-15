@@ -4,6 +4,24 @@ from datetime import date
 import os 
 
 
+def market_rate_for_future(symbol,current_rate):
+    """
+    :param symbol: the symbol of the instrument
+    :type symbol: str
+    :param current_rate: the current rate of interest(13-weeks period)
+    :type current_rate: float
+    :return: the market rate for the future instrument
+    """
+    #Get the maturity date of the chosen instrument
+    date_of_closing = pr.get_instrument_details(symbol)['instrument']['maturityDate']
+    #Get the value of t 
+    today = date.today()
+    maturity_date = date(int(date_of_closing[0:4]), int(date_of_closing[4:6]), int(date_of_closing[6:8]))
+    #The value of t is the distance in days between the current date and the maturity date divided by 91 (13 weeks)
+    tValue = (maturity_date - today).days / 91
+    return ((1 + current_rate)**tValue)-1
+    
+
 def compute_rate(symbol,market_data,spots):
     """
     :param symbol: the symbol of the instrument 
