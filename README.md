@@ -20,6 +20,7 @@ La primera vez, es necesario que el usuario ingrese sus credenciales (usuario,co
 
 ## Algunas consideraciones 
 - Para determinar la tasa de interés de mercado, se utilizaron los bonos del tesoro americano a 13 semanas, IRX. 
+- Con ese valor, se computó el valor para la tasa de interés de mercado mediante la fórmula: r = ((1+IRX)^t) -1, donde t es el tiempo hasta que cierre el futuro (t = 1 implica 13 semanas restantes, ya que ese es el plazo del IRX)
 - Para obtener un valor del dolar real (notar que el que provee por defecto yfinance es el oficial, que no se puede utilizar para operar), se calculó el CCL dividiendo el valor de la acción de YPF en pesos (YPFD.BA), por el de la acción de YPF en dolares (YPF). 
 
 ## REST API y frontend (Actualización)
