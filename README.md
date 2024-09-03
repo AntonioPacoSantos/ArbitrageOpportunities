@@ -27,3 +27,6 @@ La primera vez, es necesario que el usuario ingrese sus credenciales (usuario,co
 - En esta actualización, se implementó una rest api, que permite a los usuarios loggearse con sus cuentas de remarkets y observar las oportunidades de arbitraje que el bot encuentra en una interfaz frontend. 
 Para acceder a la misma, la url es [Link](https://frontend-arbitrage-opportunities.pages.dev/login)
 
+## Actualización 
+- Actualmente, el proyecto no se encuentra deployado. 
+
