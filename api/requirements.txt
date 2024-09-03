@@ -6,7 +6,7 @@ charset-normalizer==3.3.2
 click==8.1.7
 enum34==1.1.10
 Flask==3.0.3
-Flask-Cors==4.0.1
+Flask-Cors>=4.0.1
 Flask-RESTful==0.3.10
 frozendict==2.4.4
 gunicorn==22.0.0
